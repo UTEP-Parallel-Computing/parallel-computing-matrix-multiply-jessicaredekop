@@ -8,22 +8,23 @@ import time
 import numpy as np
 
 #making size of quare matrix modular
-size = 256
+size = 512
 
 #generating matricies using the utils
 matrix_1 = matrixUtils.genMatrix(size,2)
 matrix_2 = matrixUtils.genMatrix2(size,3)
 #creating a same size matrix filled with 0s 
 matrix_sol = [[0] * size for i in range(size)]
-matrix_sol = pymp.shared.array(matrix_sol)
+matrix_sol = pymp.shared.array((size,size), float)
 
 #starting timer
 start = time.time()
 
-with pymp.Parallel(3) as p:
+with pymp.Parallel(4) as p:
     #p.print("Calculating from thread {} of {}".format(p.thread_num, p.num_threads))
-    for i in range(size):
+    for i in p.range(0, size):
         for j in range(size):
+            #for k in range(size):
             for k in range(size):
                 matrix_sol[i][j] += matrix_1[i][k] * matrix_2[k][j]
                 
